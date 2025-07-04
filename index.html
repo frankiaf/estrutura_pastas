@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizador de Pastas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📁 Organizador de Pastas</h1>
+            <p>Crie pastas organizadas com subpastas para seus projetos</p>
+        </header>
+
+        <main class="two-column-layout">
+            <div class="left-column">
+                <div class="form-container">
+                    <form id="folderForm">
+                        <div class="inputs-row">
+                            <div class="input-group number-input">
+                                <label for="folderNumber">Número:</label>
+                                <input 
+                                    type="number" 
+                                    id="folderNumber" 
+                                    name="folderNumber" 
+                                    placeholder="001"
+                                    min="1"
+                                >
+                            </div>
+                            <div class="input-group">
+                                <label for="folderName">Nome da Pasta:</label>
+                                <input 
+                                    type="text" 
+                                    id="folderName" 
+                                    name="folderName" 
+                                    placeholder="DIGITE O NOME DA PASTA..."
+                                    required
+                                    style="text-transform: uppercase;"
+                                >
+                            </div>
+                        </div>
+
+                        <div id="subfolders-area">
+                            <div class="subfolders-header">
+                                <button type="button" id="addSubfolderBtn" class="add-subfolder-btn">+ Criar Subpasta</button>
+                                <label class="switch-container">
+                                    <span class="switch-label">Salvar apenas subpastas</span>
+                                    <div class="switch">
+                                        <input type="checkbox" id="onlySubfoldersSwitch">
+                                        <span class="slider"></span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div id="subfoldersInputs"></div>
+                            
+                            <button type="submit" class="save-btn">
+                                Salvar Pastas
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="right-column">
+                <div class="preview-container">
+                    <h3>Estrutura da pasta que será criada:</h3>
+                    <div class="folder-structure">
+                        <div class="folder-item">
+                            <span class="folder-icon">📁</span>
+                            <span class="folder-name" id="previewFolderName">nome-da-pasta</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="observation-box">
+                    <p class="observation-text">
+                        <span class="observation-icon">⚠️</span>
+                        <strong>Importante:</strong> Revise a estrutura acima antes de salvar. 
+                        As pastas serão criadas no local que você escolher.
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="notification" class="notification hidden">
+        <span id="notificationMessage"></span>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
