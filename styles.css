@@ -46,7 +46,7 @@ body {
 }
 
 header {
-    text-align: center;
+    text-align: left;
     margin-bottom: 60px;
     color: #1a1a1a;
 }
@@ -213,6 +213,10 @@ header p {
     background: #dc3545;
 }
 
+.notification.info {
+    background: #17a2b8;
+}
+
 .notification.show {
     transform: translateX(0);
 }
@@ -353,7 +357,7 @@ input[type="number"] {
     border-radius: 8px;
     border: 1px solid #e9ecef;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    cursor: move;
+    cursor: default;
     position: relative;
     overflow: hidden;
 }
@@ -415,7 +419,7 @@ input[type="number"] {
     height: 56px;
     color: #6c757d;
     font-size: 0.875rem;
-    cursor: grab;
+    cursor: grab !important;
     user-select: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 4px;
@@ -457,7 +461,7 @@ input[type="number"] {
 }
 
 .drag-handle:active {
-    cursor: grabbing;
+    cursor: grabbing !important;
     transform: scale(0.95);
     background: rgba(26, 26, 26, 0.1);
 }
@@ -470,6 +474,14 @@ input[type="number"] {
     flex: 0 0 100px;
 }
 
+.subfolder-row .input-group input {
+    cursor: text;
+}
+
+.subfolder-row .input-group label {
+    cursor: text;
+}
+
 .remove-subfolder-btn {
     background: transparent;
     color: #dc3545;
@@ -478,7 +490,7 @@ input[type="number"] {
     padding: 16px 20px;
     font-size: 0.75rem;
     font-weight: 600;
-    cursor: pointer;
+    cursor: pointer !important;
     transition: all 0.2s ease;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -486,10 +498,17 @@ input[type="number"] {
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
+    z-index: 10;
+    flex-shrink: 0;
 }
 .remove-subfolder-btn:hover {
     background: #dc3545;
     color: white;
+    transform: none;
+}
+.remove-subfolder-btn:active {
+    transform: scale(0.95);
 }
 
 @media (max-width: 768px) {
@@ -653,6 +672,22 @@ input:checked + .slider:before {
 .subfolder-row.dragging {
     transform: rotate(0deg) scale(1.02);
     box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    cursor: grabbing !important;
+}
+
+.subfolder-row.dragging * {
+    cursor: grabbing !important;
+}
+
+.subfolder-row.removing {
+    transition: none !important;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.subfolder-row.removing * {
+    transition: none !important;
+    pointer-events: none;
 }
 
 .subfolder-row:hover {

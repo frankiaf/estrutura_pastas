@@ -11,7 +11,7 @@ class FolderOrganizer {
         this.subfoldersInputs = document.getElementById('subfoldersInputs');
         this.onlySubfoldersSwitch = document.getElementById('onlySubfoldersSwitch');
         
-        this.subfolders = ['_layout', 'final', 'preview', 'texto', 'referencias'];
+        this.subfolders = ['_Layout', '_Links', 'Final', 'Preview', 'Referencias', 'Texto'];
         this.dynamicSubfolders = [];
         
         this.init();
@@ -25,8 +25,8 @@ class FolderOrganizer {
     setupEventListeners() {
         // Preview em tempo real
         this.folderNameInput.addEventListener('input', () => {
-            // Converter para maiúsculas
-            this.folderNameInput.value = this.folderNameInput.value.toUpperCase();
+            // Remover acentos e converter para maiúsculas
+            this.folderNameInput.value = this.removeAccents(this.folderNameInput.value).toUpperCase();
             this.updatePreview();
         });
 
@@ -137,8 +137,27 @@ class FolderOrganizer {
         }
     }
 
+    removeAccents(text) {
+        const accentMap = {
+            'À': 'A', 'Á': 'A', 'Â': 'A', 'Ã': 'A', 'Ä': 'A', 'Å': 'A',
+            'È': 'E', 'É': 'E', 'Ê': 'E', 'Ë': 'E',
+            'Ì': 'I', 'Í': 'I', 'Î': 'I', 'Ï': 'I',
+            'Ò': 'O', 'Ó': 'O', 'Ô': 'O', 'Õ': 'O', 'Ö': 'O',
+            'Ù': 'U', 'Ú': 'U', 'Û': 'U', 'Ü': 'U',
+            'Ç': 'C', 'Ñ': 'N',
+            'à': 'a', 'á': 'a', 'â': 'a', 'ã': 'a', 'ä': 'a', 'å': 'a',
+            'è': 'e', 'é': 'e', 'ê': 'e', 'ë': 'e',
+            'ì': 'i', 'í': 'i', 'î': 'i', 'ï': 'i',
+            'ò': 'o', 'ó': 'o', 'ô': 'o', 'õ': 'o', 'ö': 'o',
+            'ù': 'u', 'ú': 'u', 'û': 'u', 'ü': 'u',
+            'ç': 'c', 'ñ': 'n'
+        };
+        
+        return text.replace(/[À-ÿ]/g, char => accentMap[char] || char);
+    }
+
     sanitizeFolderName(name) {
-        return name
+        return this.removeAccents(name)
             .toUpperCase()
             .replace(/[^A-Z0-9\s]/g, '') // Remove caracteres especiais (mantém maiúsculas e espaços)
             .replace(/\s+/g, ' ') // Remove espaços duplicados
@@ -148,7 +167,6 @@ class FolderOrganizer {
     addDynamicSubfolderInput() {
         const row = document.createElement('div');
         row.className = 'subfolder-row';
-        row.draggable = true;
         row.dataset.index = this.subfoldersInputs.children.length;
 
         // Número
@@ -159,8 +177,8 @@ class FolderOrganizer {
         numberLabel.htmlFor = '';
         const numberInput = document.createElement('input');
         numberInput.type = 'number';
-        numberInput.placeholder = '001';
-        numberInput.min = '1';
+        numberInput.placeholder = '000';
+        numberInput.min = '0';
         numberInput.style.textTransform = 'none';
         numberInput.className = 'subfolder-number';
         numberGroup.appendChild(numberLabel);
@@ -186,17 +204,29 @@ class FolderOrganizer {
         dragHandle.className = 'drag-handle';
         dragHandle.innerHTML = '⋮⋮';
         dragHandle.title = 'Arraste para reordenar';
+        dragHandle.draggable = true;
 
         // Remover botão
         const removeBtn = document.createElement('button');
         removeBtn.type = 'button';
         removeBtn.className = 'remove-subfolder-btn';
         removeBtn.textContent = 'Remover';
-        removeBtn.onclick = () => {
-            row.remove();
-            this.updateSubfoldersPreview();
-            this.updateRowIndices();
-        };
+        removeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            // Adicionar classe para desabilitar transições durante a remoção
+            row.classList.add('removing');
+            
+            // Remover o elemento com um pequeno delay para evitar conflitos
+            setTimeout(() => {
+                if (row.parentNode) {
+                    row.remove();
+                    this.updateSubfoldersPreview();
+                    this.updateRowIndices();
+                }
+            }, 10);
+        });
 
         // Event listeners para atualizar preview
         numberInput.addEventListener('input', () => {
@@ -204,7 +234,7 @@ class FolderOrganizer {
         });
 
         nameInput.addEventListener('input', () => {
-            nameInput.value = nameInput.value.toUpperCase();
+            nameInput.value = this.removeAccents(nameInput.value).toUpperCase();
             this.updateSubfoldersPreview();
         });
 
@@ -217,8 +247,8 @@ class FolderOrganizer {
             this.updateSubfoldersPreview();
         });
 
-        // Drag and drop event listeners
-        row.addEventListener('dragstart', (e) => {
+        // Drag and drop event listeners - apenas no drag handle
+        dragHandle.addEventListener('dragstart', (e) => {
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/html', row.outerHTML);
             e.dataTransfer.setData('text/plain', row.dataset.index);
@@ -237,7 +267,7 @@ class FolderOrganizer {
             });
         });
 
-        row.addEventListener('dragend', () => {
+        dragHandle.addEventListener('dragend', () => {
             row.classList.remove('dragging');
             
             // Remove all drag-related classes
@@ -382,6 +412,15 @@ class FolderOrganizer {
         this.setLoadingState(true);
 
         try {
+            // Mostrar notificação informativa
+            this.showNotification('Abrindo diálogo para selecionar onde salvar...', 'info');
+            
+            // Aguardar um pouco para mostrar a notificação
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            // Esconder a notificação antes de abrir o diálogo
+            this.hideNotification();
+            
             // Abrir diálogo para selecionar onde salvar
             const folderHandle = await this.selectFolder();
             
@@ -395,9 +434,8 @@ class FolderOrganizer {
                     this.updatePreview();
                     this.showNotification(`Pasta "${finalName}" criada com sucesso!`, 'success');
                 }
-            } else {
-                this.showNotification('Operação cancelada pelo usuário.', 'error');
             }
+            // Nota: Se folderHandle for null, a função selectFolder() já mostrou uma notificação apropriada
             
         } catch (error) {
             this.showNotification('Erro ao criar as pastas. Tente novamente.', 'error');
@@ -411,10 +449,38 @@ class FolderOrganizer {
         try {
             // Verificar se a API File System Access está disponível
             if ('showDirectoryPicker' in window) {
-                return await window.showDirectoryPicker({
-                    mode: 'readwrite',
-                    startIn: 'desktop'
-                });
+                // Lista de opções de startIn para tentar em ordem
+                const startInOptions = [
+                    'desktop',
+                    'documents', 
+                    'downloads',
+                    undefined // sem startIn
+                ];
+                
+                // Tentar cada opção até uma funcionar
+                for (const startIn of startInOptions) {
+                    try {
+                        const options = {
+                            mode: 'readwrite'
+                        };
+                        
+                        if (startIn) {
+                            options.startIn = startIn;
+                        }
+                        
+                        return await window.showDirectoryPicker(options);
+                    } catch (startInError) {
+                        console.warn(`Não foi possível iniciar em ${startIn || 'padrão'}, tentando próxima opção:`, startInError);
+                        
+                        // Se for o último item da lista, relançar o erro
+                        if (startIn === undefined) {
+                            throw startInError;
+                        }
+                        
+                        // Continuar para próxima opção
+                        continue;
+                    }
+                }
             } else {
                 // Fallback para navegadores que não suportam a API
                 this.showNotification('Seu navegador não suporta seleção de pastas. Use Chrome, Edge ou Firefox recente.', 'error');
@@ -423,9 +489,30 @@ class FolderOrganizer {
         } catch (error) {
             if (error.name === 'AbortError') {
                 // Usuário cancelou a seleção
+                this.showNotification('Seleção cancelada. Clique novamente para escolher onde salvar.', 'info');
                 return null;
             }
-            throw error;
+            
+            // Tratar erros específicos
+            if (error.name === 'NotAllowedError') {
+                this.showNotification('Acesso negado. Tente escolher uma pasta diferente (como Documentos ou Downloads).', 'error');
+                return null;
+            }
+            
+            if (error.name === 'SecurityError') {
+                this.showNotification('Não é possível acessar esta pasta por motivos de segurança. Escolha uma pasta diferente.', 'error');
+                return null;
+            }
+            
+            // Erro genérico do diálogo
+            if (error.message && error.message.includes('contém arquivos do sistema')) {
+                this.showNotification('Esta pasta contém arquivos do sistema. Escolha uma pasta diferente como Documentos ou Downloads.', 'error');
+                return null;
+            }
+            
+            console.error('Erro ao selecionar pasta:', error);
+            this.showNotification('Erro ao abrir o seletor de pasta. Tente novamente ou escolha uma pasta diferente.', 'error');
+            return null;
         }
     }
 
@@ -470,11 +557,11 @@ class FolderOrganizer {
         if (loading) {
             this.saveBtn.classList.add('loading');
             this.saveBtn.disabled = true;
-            this.saveBtn.innerHTML = '<span class="btn-icon">⏳</span> Selecionando Local...';
+            this.saveBtn.innerHTML = '<span class="btn-icon">⏳</span> Selecione onde salvar...';
         } else {
             this.saveBtn.classList.remove('loading');
             this.saveBtn.disabled = false;
-            // this.saveBtn.innerHTML = '<span class="btn-icon">💾</span> Salvar Pastas';
+            this.saveBtn.innerHTML = '<span class="btn-icon">💾</span> Salvar Pastas';
         }
     }
 
@@ -495,6 +582,13 @@ class FolderOrganizer {
                 this.notification.classList.add('hidden');
             }, 300);
         }, 4000);
+    }
+
+    hideNotification() {
+        this.notification.classList.remove('show');
+        setTimeout(() => {
+            this.notification.classList.add('hidden');
+        }, 300);
     }
 
     // Método para exportar a estrutura de pastas (útil para integração com backend)
