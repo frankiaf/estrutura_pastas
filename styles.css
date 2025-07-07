@@ -848,7 +848,7 @@ input:checked + .slider:before {
 
 .api-key-section .input-group input {
     width: 100%;
-    padding: 12px 50px 12px 16px;
+    padding: 12px 80px 12px 16px;
     border: 1px solid #d1d5db;
     border-radius: 6px;
     font-size: 0.875rem;
@@ -869,9 +869,27 @@ input:checked + .slider:before {
     font-family: 'Courier New', monospace;
 }
 
+.api-key-section .input-group.valid input {
+    border-color: #10b981;
+    box-shadow: 0 0 0 1px #10b981;
+}
+
+.api-key-section .input-group.invalid input {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 1px #ef4444;
+}
+
+.api-key-section .input-group.valid .toggle-key-btn {
+    color: #10b981;
+}
+
+.api-key-section .input-group.valid .clear-key-btn {
+    color: #10b981;
+}
+
 .toggle-key-btn {
     position: absolute;
-    right: 12px;
+    right: 44px;
     top: 50%;
     transform: translateY(-50%);
     background: none;
@@ -887,6 +905,26 @@ input:checked + .slider:before {
 .toggle-key-btn:hover {
     color: #374151;
     background: #f3f4f6;
+}
+
+.clear-key-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.clear-key-btn:hover {
+    color: #dc2626;
+    background: #fef2f2;
 }
 
 .api-key-help {
@@ -906,6 +944,52 @@ input:checked + .slider:before {
 .api-key-help a:hover {
     color: #374151;
     text-decoration: underline;
+}
+
+.api-key-instructions {
+    margin-top: 16px;
+    padding: 12px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.api-key-instructions p {
+    margin: 0 0 8px 0;
+    color: #374151;
+}
+
+.api-key-instructions ol {
+    margin: 8px 0;
+    padding-left: 20px;
+    color: #6b7280;
+}
+
+.api-key-instructions li {
+    margin-bottom: 4px;
+}
+
+.api-key-instructions ul {
+    margin: 4px 0;
+    padding-left: 20px;
+    color: #6b7280;
+}
+
+.api-key-instructions a {
+    color: #111827;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.api-key-instructions a:hover {
+    text-decoration: underline;
+}
+
+.api-key-instructions small {
+    color: #ef4444;
+    font-weight: 500;
 }
 
 .ai-actions {
@@ -1223,12 +1307,30 @@ input:checked + .slider:before {
     }
     
     .api-key-section .input-group input {
-        padding: 10px 40px 10px 12px;
+        padding: 10px 70px 10px 12px;
         font-size: 0.8rem;
     }
     
     .toggle-key-btn {
+        right: 36px;
+    }
+    
+    .clear-key-btn {
         right: 8px;
+    }
+    
+    .api-key-instructions {
+        padding: 8px;
+        margin-top: 12px;
+        font-size: 0.7rem;
+    }
+    
+    .api-key-instructions ol {
+        padding-left: 16px;
+    }
+    
+    .api-key-instructions ul {
+        padding-left: 16px;
     }
     
     .dropzone {

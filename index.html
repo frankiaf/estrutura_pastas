@@ -41,12 +41,29 @@
                                     autocomplete="off"
                                 >
                                 <button type="button" id="toggleApiKey" class="toggle-key-btn" title="Mostrar/Ocultar chave">👁</button>
+                                <button type="button" id="clearApiKey" class="clear-key-btn" title="Limpar chave salva">🗑</button>
                             </div>
                             <p class="api-key-help">
                                 <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">
                                     Obter chave API OpenAI →
                                 </a>
                             </p>
+                            <div class="api-key-instructions">
+                                <p><strong>💡 Como configurar:</strong></p>
+                                <ol>
+                                    <li>Acesse <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com/api-keys</a></li>
+                                    <li>Clique em "Create new secret key"</li>
+                                    <li>Copie a chave completa (começa com "sk-")</li>
+                                    <li>Cole no campo acima</li>
+                                </ol>
+                                <p><small>⚠️ Sua chave deve ter créditos disponíveis para funcionar.</small></p>
+                                <p><small>🔧 <strong>Erro "Incorrect API key"?</strong> Verifique se:</small></p>
+                                <ul>
+                                    <li><small>A chave está completa (sem espaços)</small></li>
+                                    <li><small>A chave está ativa na sua conta OpenAI</small></li>
+                                    <li><small>Você tem créditos disponíveis</small></li>
+                                </ul>
+                            </div>
                         </div>
 
                         <div class="ai-actions">

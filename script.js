@@ -4,6 +4,7 @@ class AIVisionIntegration {
         
         this.apiKeyInput = document.getElementById('apiKeyInput');
         this.toggleApiKeyBtn = document.getElementById('toggleApiKey');
+        this.clearApiKeyBtn = document.getElementById('clearApiKey');
         this.dropzone = document.getElementById('dropzone');
         this.imageUpload = document.getElementById('imageUpload');
         this.processAllBtn = document.getElementById('processAllBtn');
@@ -26,7 +27,7 @@ class AIVisionIntegration {
     
     isApiKeyValid() {
         const apiKey = this.getApiKey();
-        return apiKey && apiKey !== '' && apiKey.startsWith('sk-');
+        return apiKey && apiKey !== '' && apiKey.startsWith('sk-') && apiKey.length > 20;
     }
     
     init() {
@@ -91,6 +92,11 @@ class AIVisionIntegration {
             this.toggleApiKeyVisibility();
         });
         
+        // Clear API Key
+        this.clearApiKeyBtn.addEventListener('click', () => {
+            this.clearApiKey();
+        });
+        
         // Save API Key on change
         this.apiKeyInput.addEventListener('input', () => {
             this.saveApiKey();
@@ -126,6 +132,24 @@ class AIVisionIntegration {
         } else {
             localStorage.removeItem('openai_api_key');
         }
+        this.updateApiKeyValidation();
+    }
+    
+    updateApiKeyValidation() {
+        const isValid = this.isApiKeyValid();
+        const inputGroup = this.apiKeyInput.parentElement;
+        
+        if (isValid) {
+            inputGroup.classList.add('valid');
+            inputGroup.classList.remove('invalid');
+        } else {
+            inputGroup.classList.remove('valid');
+            if (this.getApiKey()) {
+                inputGroup.classList.add('invalid');
+            } else {
+                inputGroup.classList.remove('invalid');
+            }
+        }
     }
     
     loadSavedApiKey() {
@@ -133,6 +157,14 @@ class AIVisionIntegration {
         if (savedKey) {
             this.apiKeyInput.value = savedKey;
         }
+        this.updateApiKeyValidation();
+    }
+    
+    clearApiKey() {
+        this.apiKeyInput.value = '';
+        localStorage.removeItem('openai_api_key');
+        this.updateApiKeyValidation();
+        this.folderOrganizer.showNotification('Chave API removida!', 'success');
     }
     
     handleImageUpload(file) {
@@ -355,7 +387,16 @@ class AIVisionIntegration {
         if (!imageData) return;
         
         if (!this.isApiKeyValid()) {
-            this.folderOrganizer.showNotification('Configure sua chave API do OpenAI no campo acima.', 'error');
+            const apiKey = this.getApiKey();
+            if (!apiKey || apiKey === '') {
+                this.folderOrganizer.showNotification('Digite sua chave API do OpenAI no campo acima.', 'error');
+            } else if (!apiKey.startsWith('sk-')) {
+                this.folderOrganizer.showNotification('Chave API inválida. Deve começar com "sk-".', 'error');
+            } else if (apiKey.length < 20) {
+                this.folderOrganizer.showNotification('Chave API muito curta. Verifique se copiou completamente.', 'error');
+            } else {
+                this.folderOrganizer.showNotification('Chave API inválida. Verifique se está correta.', 'error');
+            }
             return;
         }
         
@@ -365,7 +406,16 @@ class AIVisionIntegration {
     
     async processAllImagesWithAI() {
         if (!this.isApiKeyValid()) {
-            this.folderOrganizer.showNotification('Configure sua chave API do OpenAI no campo acima.', 'error');
+            const apiKey = this.getApiKey();
+            if (!apiKey || apiKey === '') {
+                this.folderOrganizer.showNotification('Digite sua chave API do OpenAI no campo acima.', 'error');
+            } else if (!apiKey.startsWith('sk-')) {
+                this.folderOrganizer.showNotification('Chave API inválida. Deve começar com "sk-".', 'error');
+            } else if (apiKey.length < 20) {
+                this.folderOrganizer.showNotification('Chave API muito curta. Verifique se copiou completamente.', 'error');
+            } else {
+                this.folderOrganizer.showNotification('Chave API inválida. Verifique se está correta.', 'error');
+            }
             return;
         }
         
@@ -535,7 +585,18 @@ class AIVisionIntegration {
             
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error?.message || 'Erro na API do OpenAI');
+                const errorMessage = errorData.error?.message || 'Erro na API do OpenAI';
+                
+                // Tratar erros específicos de chave API
+                if (errorMessage.includes('Incorrect API key') || errorMessage.includes('Invalid API key')) {
+                    throw new Error('Chave API inválida. Verifique se sua chave está correta e ativa.');
+                } else if (errorMessage.includes('quota') || errorMessage.includes('billing')) {
+                    throw new Error('Cota da API excedida. Verifique seu plano OpenAI.');
+                } else if (errorMessage.includes('rate limit')) {
+                    throw new Error('Limite de requisições excedido. Tente novamente em alguns minutos.');
+                } else {
+                    throw new Error(errorMessage);
+                }
             }
             
             const data = await response.json();
