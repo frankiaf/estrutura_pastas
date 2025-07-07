@@ -30,7 +30,24 @@
                             <p class="ai-subtitle">Extraia informações automaticamente de screenshots</p>
                         </div>
                         
-                        <!-- API Key removida da interface - agora é fixa no código -->
+                        <div class="api-key-section">
+                            <div class="input-group">
+                                <label for="apiKeyInput">Chave API OpenAI:</label>
+                                <input 
+                                    type="password" 
+                                    id="apiKeyInput" 
+                                    name="apiKeyInput" 
+                                    placeholder="sk-proj-..."
+                                    autocomplete="off"
+                                >
+                                <button type="button" id="toggleApiKey" class="toggle-key-btn" title="Mostrar/Ocultar chave">👁</button>
+                            </div>
+                            <p class="api-key-help">
+                                <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">
+                                    Obter chave API OpenAI →
+                                </a>
+                            </p>
+                        </div>
 
                         <div class="ai-actions">
                             <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;">

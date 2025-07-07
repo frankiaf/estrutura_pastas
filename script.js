@@ -2,9 +2,8 @@ class AIVisionIntegration {
     constructor(folderOrganizer) {
         this.folderOrganizer = folderOrganizer;
         
-        // ⚠️ IMPORTANTE: Substitua pela sua chave API do OpenAI
-        this.API_KEY = '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';
-        
+        this.apiKeyInput = document.getElementById('apiKeyInput');
+        this.toggleApiKeyBtn = document.getElementById('toggleApiKey');
         this.dropzone = document.getElementById('dropzone');
         this.imageUpload = document.getElementById('imageUpload');
         this.processAllBtn = document.getElementById('processAllBtn');
@@ -21,8 +20,18 @@ class AIVisionIntegration {
         this.init();
     }
     
+    getApiKey() {
+        return this.apiKeyInput.value.trim();
+    }
+    
+    isApiKeyValid() {
+        const apiKey = this.getApiKey();
+        return apiKey && apiKey !== '' && apiKey.startsWith('sk-');
+    }
+    
     init() {
         this.setupEventListeners();
+        this.loadSavedApiKey();
     }
     
     setupEventListeners() {
@@ -77,7 +86,15 @@ class AIVisionIntegration {
             this.clearAllImages();
         });
         
-        // API Key agora é fixa no código - não há mais input para salvar
+        // API Key toggle visibility
+        this.toggleApiKeyBtn.addEventListener('click', () => {
+            this.toggleApiKeyVisibility();
+        });
+        
+        // Save API Key on change
+        this.apiKeyInput.addEventListener('input', () => {
+            this.saveApiKey();
+        });
         
         // Global paste shortcut (Ctrl+V)
         document.addEventListener('keydown', (e) => {
@@ -94,6 +111,28 @@ class AIVisionIntegration {
                 this.handlePasteEvent(e);
             }
         });
+    }
+    
+    toggleApiKeyVisibility() {
+        const isPassword = this.apiKeyInput.type === 'password';
+        this.apiKeyInput.type = isPassword ? 'text' : 'password';
+        this.toggleApiKeyBtn.textContent = isPassword ? '🙈' : '👁';
+    }
+    
+    saveApiKey() {
+        const apiKey = this.getApiKey();
+        if (apiKey) {
+            localStorage.setItem('openai_api_key', apiKey);
+        } else {
+            localStorage.removeItem('openai_api_key');
+        }
+    }
+    
+    loadSavedApiKey() {
+        const savedKey = localStorage.getItem('openai_api_key');
+        if (savedKey) {
+            this.apiKeyInput.value = savedKey;
+        }
     }
     
     handleImageUpload(file) {
@@ -315,8 +354,8 @@ class AIVisionIntegration {
         const imageData = this.images.find(img => img.id === imageId);
         if (!imageData) return;
         
-        if (!this.API_KEY || this.API_KEY === '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') {
-            this.folderOrganizer.showNotification('Configure sua chave API do OpenAI no código JavaScript (script.js).', 'error');
+        if (!this.isApiKeyValid()) {
+            this.folderOrganizer.showNotification('Configure sua chave API do OpenAI no campo acima.', 'error');
             return;
         }
         
@@ -325,8 +364,8 @@ class AIVisionIntegration {
     }
     
     async processAllImagesWithAI() {
-        if (!this.API_KEY || this.API_KEY === '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') {
-            this.folderOrganizer.showNotification('Configure sua chave API do OpenAI no código JavaScript (script.js).', 'error');
+        if (!this.isApiKeyValid()) {
+            this.folderOrganizer.showNotification('Configure sua chave API do OpenAI no campo acima.', 'error');
             return;
         }
         
@@ -409,7 +448,7 @@ class AIVisionIntegration {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${this.API_KEY}`
+                    'Authorization': `Bearer ${this.getApiKey()}`
                 },
                 body: JSON.stringify({
                     model: 'gpt-4o',

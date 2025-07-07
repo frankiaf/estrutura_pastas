@@ -822,7 +822,91 @@ input:checked + .slider:before {
     line-height: 1.5;
 }
 
-/* Estilos do input da API removidos - API Key agora é fixa no código */
+
+
+/* API Key Section */
+.api-key-section {
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+.api-key-section .input-group {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.api-key-section .input-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #374151;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.api-key-section .input-group input {
+    width: 100%;
+    padding: 12px 50px 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    background: #ffffff;
+    color: #111827;
+    transition: border-color 0.2s ease;
+    font-family: 'Courier New', monospace;
+}
+
+.api-key-section .input-group input:focus {
+    outline: none;
+    border-color: #374151;
+    box-shadow: 0 0 0 1px #374151;
+}
+
+.api-key-section .input-group input::placeholder {
+    color: #9ca3af;
+    font-family: 'Courier New', monospace;
+}
+
+.toggle-key-btn {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.toggle-key-btn:hover {
+    color: #374151;
+    background: #f3f4f6;
+}
+
+.api-key-help {
+    color: #6b7280;
+    font-size: 0.75rem;
+    margin: 0;
+    text-align: center;
+}
+
+.api-key-help a {
+    color: #111827;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.api-key-help a:hover {
+    color: #374151;
+    text-decoration: underline;
+}
 
 .ai-actions {
     margin-bottom: 24px;
@@ -1131,6 +1215,20 @@ input:checked + .slider:before {
     
     .ai-subtitle {
         font-size: 0.875rem;
+    }
+    
+    .api-key-section {
+        padding: 16px;
+        margin-bottom: 20px;
+    }
+    
+    .api-key-section .input-group input {
+        padding: 10px 40px 10px 12px;
+        font-size: 0.8rem;
+    }
+    
+    .toggle-key-btn {
+        right: 8px;
     }
     
     .dropzone {
