@@ -315,7 +315,7 @@ class AIVisionIntegration {
         const imageData = this.images.find(img => img.id === imageId);
         if (!imageData) return;
         
-        if (!this.API_KEY || this.API_KEY === 'sk-COLE_SUA_CHAVE_AQUI') {
+        if (!this.API_KEY || this.API_KEY === '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') {
             this.folderOrganizer.showNotification('Configure sua chave API do OpenAI no código JavaScript (script.js).', 'error');
             return;
         }
@@ -325,7 +325,7 @@ class AIVisionIntegration {
     }
     
     async processAllImagesWithAI() {
-        if (!this.API_KEY || this.API_KEY === 'sk-COLE_SUA_CHAVE_AQUI') {
+        if (!this.API_KEY || this.API_KEY === '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') {
             this.folderOrganizer.showNotification('Configure sua chave API do OpenAI no código JavaScript (script.js).', 'error');
             return;
         }
