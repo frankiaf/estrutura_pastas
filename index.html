@@ -9,13 +9,63 @@
 <body>
     <div class="container">
         <header>
-            <h1> Organizador de Pastas</h1>
-            <p>Crie pastas organizadas com subpastas para seus projetos</p>
+            <div class="header-content">
+                <div class="header-logo">
+                    <img src="marca_essentiagroup.svg" alt="Essentia Group" class="logo">
+                </div>
+                <div class="header-text">
+                    <h1>Organizador de pastas</h1>
+                    <p>Crie pastas organizadas e padronizadas para os seus projetos.</p>
+                </div>
+            </div>
         </header>
 
         <main class="two-column-layout">
             <div class="left-column">
                 <div class="form-container">
+                    <!-- AI Vision Integration -->
+                    <div class="ai-section">
+                        <div class="ai-header">
+                            <h3>Integração com IA</h3>
+                            <p class="ai-subtitle">Extraia informações automaticamente de screenshots</p>
+                        </div>
+                        
+                        <!-- API Key removida da interface - agora é fixa no código -->
+
+                        <div class="ai-actions">
+                            <input type="file" id="imageUpload" accept="image/*" multiple style="display: none;">
+                            
+                            <div class="dropzone" id="dropzone">
+                                <div class="dropzone-content">
+                                
+                                    <h4>Arraste imagens aqui</h4>
+                                    <p>ou <strong>clique para selecionar</strong> ou <strong>Cole (Ctrl+V)</strong></p>
+                                    <div class="dropzone-formats">PNG, JPG, JPEG, GIF, WebP</div>
+                                </div>
+                            </div>
+                            
+                            <div id="aiProgress" class="progress-container hidden">
+                                <div class="progress-bar">
+                                    <div class="progress-fill"></div>
+                                </div>
+                                <span id="progressText" class="progress-text">Processando...</span>
+                            </div>
+                        </div>
+
+                        <div id="imagesGallery" class="gallery-container hidden">
+                            <div class="gallery-header">
+                                <span class="gallery-title">Imagens (<span id="imageCount">0</span>)</span>
+                                <div class="gallery-actions">
+                                    <button type="button" id="processAllBtn" class="btn-small process">Processar Todas</button>
+                                    <button type="button" id="clearAllBtn" class="btn-small clear">Limpar</button>
+                                </div>
+                            </div>
+                            <div id="imagesList" class="images-grid">
+                                <!-- Imagens serão adicionadas aqui dinamicamente -->
+                            </div>
+                        </div>
+                    </div>
+
                     <form id="folderForm">
                         <div class="inputs-row">
                             <div class="input-group number-input">
@@ -64,21 +114,20 @@
 
             <div class="right-column">
                 <div class="preview-container">
-                    <h3>Estrutura da pasta que será criada:</h3>
+                    <h3>Pré-visualização da estrutura das pastas</h3>
                     <div class="folder-structure">
                         <div class="folder-item">
                             <span class="folder-icon">📁</span>
                             <span class="folder-name" id="previewFolderName">nome-da-pasta</span>
                         </div>
                     </div>
-                </div>
-                
-                <div class="observation-box">
-                    <p class="observation-text">
-                        <span class="observation-icon">💡</span>
-                        <strong>Dica:</strong> O diálogo tentará abrir na área de trabalho primeiro. 
-                        Se houver problemas, tente salvar em Documentos, Downloads ou outra pasta de sua escolha.
-                    </p>
+                    
+                    <div class="observation-box">
+                        <p class="observation-text">
+                            <span class="observation-icon">💡</span>
+                            <strong>Dica:</strong> Revise cuidadosamente a estrutura das pastas antes de salvar.
+                        </p>
+                    </div>
                 </div>
             </div>
         </main>
